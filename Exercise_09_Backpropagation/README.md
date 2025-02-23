@@ -1,4 +1,4 @@
-# Exercise 10
+# Exercise 09
 
 ## Building an Artificial Neural Network (ANN) using Backpropagation
 

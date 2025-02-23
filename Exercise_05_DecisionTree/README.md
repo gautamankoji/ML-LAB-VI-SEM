@@ -1,4 +1,4 @@
-# Exercise 06  
+# Exercise 05
 
 ## Implementation of Decision Tree using sklearn  
 

@@ -1,4 +1,4 @@
-# Exercise 08  
+# Exercise 07
 
 ## Implementation of Support Vector Machines (SVM) using sklearn  
 

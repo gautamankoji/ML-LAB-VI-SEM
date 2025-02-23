@@ -1,4 +1,4 @@
-# Exercise 09  
+# Exercise 08
 
 ## Implementation of Logistic Regression using sklearn  
 

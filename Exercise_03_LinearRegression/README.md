@@ -1,4 +1,4 @@
-# Exercise 04  
+# Exercise 03 
 
 ## Implementation of Simple Linear Regression in Python  
 

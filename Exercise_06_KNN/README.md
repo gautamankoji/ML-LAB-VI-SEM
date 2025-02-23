@@ -1,4 +1,4 @@
-# Exercise 07  
+# Exercise 06
 
 ## Implementation of K-Nearest Neighbors (KNN) using sklearn  
 
