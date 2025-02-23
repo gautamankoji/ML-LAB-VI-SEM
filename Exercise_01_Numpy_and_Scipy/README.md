@@ -1,66 +1,69 @@
 # Exercise 01
 
-## Extracting Data from the Database using Python
+## Study of Python Basic Libraries such as NumPy and SciPy  
 
 ### Aim  
 
-To extract and display data from a database table using Python.
+To understand and experiment with basic functionalities of Python libraries NumPy and SciPy.  
 
 ### Procedure/Program  
 
-SQLite Example:  
+#### NumPy Example  
 
 ```python
-import sqlite3
+import numpy as np
 
-connection = sqlite3.connect('student_data.db')
-cursor = connection.cursor()
-cursor.execute("SELECT * FROM students")
-rows = cursor.fetchall()
+arr = np.array([[1, 2, 3], [4, 5, 6]])
+print("NumPy Array:\n", arr)
 
-print("ID\tName\t\tAge\tDepartment")
-for row in rows:
-    print(f"{row[0]}\t{row[1]}\t{row[2]}\t{row[3]}")
-
-connection.close()
+# basic operations
+print("Shape of array:", arr.shape)
+print("Sum of all elements:", np.sum(arr))
+print("Mean of elements:", np.mean(arr))
+print("Transpose of array:\n", arr.T)
 ```
 
-MySQL Example:  
+#### SciPy Example  
 
 ```python
-import mysql.connector
+from scipy import stats
+import numpy as np
 
-connection = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="password",
-    database="student_data"
-)
-cursor = connection.cursor()
-cursor.execute("SELECT * FROM students")
-rows = cursor.fetchall()
+data = [12, 15, 14, 10, 18, 14, 17, 16, 15, 15]
 
-print("ID\tName\t\tAge\tDepartment")
-for row in rows:
-    print(f"{row[0]}\t{row[1]}\t{row[2]}\t{row[3]}")
+mean = np.mean(data)
+median = np.median(data)
+mode = stats.mode(data)
 
-connection.close()
+print("Mean:", mean)
+print("Median:", median)
+print("Mode:", mode.mode)
 ```
 
 ### Output/Explanation  
 
-- Output:  
+- **Output:**  
 
-The program connects to the database, executes a query, and prints the data in the following format:  
+  The program demonstrates basic NumPy and SciPy functionalities, with an expected output similar to:  
 
-```bash
-ID    Name        Age    Department
-1     Alice       21     CSE
-2     Bob         22     ECE
-3     Charlie     23     EEE
-```
+  ```bash
+  NumPy Array:
+   [[1 2 3]
+   [4 5 6]]
+  Shape of array: (2, 3)
+  Sum of all elements: 21
+  Mean of elements: 3.5
+  Transpose of array:
+   [[1 4]
+   [2 5]
+   [3 6]]
+  
+  Mean: 14.6
+  Median: 15.0
+  Mode: 15
+  ```
 
-- Explanation:  
-  - The script establishes a connection to the database using Python's libraries.  
-  - It executes a SQL `SELECT` query to retrieve all rows from the `students` table.  
-  - The results are displayed in a tabular format, demonstrating successful data extraction.
+- **Explanation:**  
+  - NumPy is used for array creation, mathematical operations, and reshaping.  
+  - SciPy's `stats` module provides statistical functions such as mean, median, and mode.  
+  - The program showcases how these libraries simplify numerical computations.

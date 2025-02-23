@@ -1,51 +1,98 @@
-# Exercise 02
+# Exercise 02  
 
-## Apply Bayes’ rule in Python to solve the problem: The probability that it is Friday and that a student is absent is 3%. Since there are 5 school days in a week, the probability that it is Friday is 20%. What is the probability that a student is absent given that today is Friday? (Ans: 15%)
+## Study of Python Libraries for ML Applications such as Pandas and Matplotlib  
 
 ### Aim  
 
-To calculate the probability of a student being absent given that today is Friday using Bayes’ theorem.  
-
-### Theory
-
-Bayes’ theorem provides a way to calculate the conditional probability of an event based on prior knowledge of conditions that might be related to the event. The formula is:  
-
-$$P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}$$
-
-Where:
-
-- `P(A|B)`: Probability of event A (student absent) given event B (today is Friday).  
-- `P(B|A)`: Probability of event B given event A.  
-- `P(A)`: Probability of event A.  
-- `P(B)`: Probability of event B.  
+To explore and experiment with Python libraries **Pandas** and **Matplotlib**, which are commonly used in Machine Learning applications.  
 
 ### Procedure/Program  
 
+#### **Pandas Example:**  
+
 ```python
-P_Friday_and_Absent = 0.03  # P(Friday and Absent)
-P_Friday = 0.20             # P(Friday)
+import pandas as pd
 
-# calculate P(Absent | Friday) using Bayes' theorem
-P_Absent_given_Friday = P_Friday_and_Absent / P_Friday
+# sample dataset
+data = {
+    "Name": ["Alice", "Bob", "Charlie", "David"],
+    "Age": [25, 30, 35, 40],
+    "Salary": [50000, 60000, 70000, 80000]
+}
 
-print(f"The probability that a student is absent given that today is Friday: {P_Absent_given_Friday * 100:.2f}%")
+# DataFrame
+df = pd.DataFrame(data)
+
+print("DataFrame:\n", df)
+
+# basic operations
+print("\nDescriptive Statistics:\n", df.describe())
+print("\nSelecting Age Column:\n", df["Age"])
+print("\nFiltering Rows where Age > 30:\n", df[df["Age"] > 30])
+```
+
+#### **Matplotlib Example:**  
+
+```python
+import matplotlib.pyplot as plt
+
+# sample data
+names = ["Alice", "Bob", "Charlie", "David"]
+salaries = [50000, 60000, 70000, 80000]
+
+# bar chart
+plt.bar(names, salaries, color=['blue', 'orange', 'green', 'red'])
+plt.xlabel("Employees")
+plt.ylabel("Salary")
+plt.title("Employee Salary Chart")
+plt.show()
 ```
 
 ### Output/Explanation  
 
-Output:
-  
-The program outputs:  
+- **Output:**  
+  The program demonstrates basic functionalities of Pandas and Matplotlib. Expected outputs:  
 
-```bash
-The probability that a student is absent given that today is Friday: 15.00%
-```
+  **Pandas Output:**  
 
-Explanation:  
+  ```bash
+  DataFrame:
+        Name  Age  Salary
+  0    Alice   25   50000
+  1      Bob   30   60000
+  2  Charlie   35   70000
+  3    David   40   80000
 
-- The program calculates `P(Absent|Friday) = (P(Friday and Absent)) / P(Friday)`.  
-- Given `P(Friday and Absent) = 0.03` and `P(Friday) = 0.20`, we get:  
+  Descriptive Statistics:
+              Age        Salary
+  count   4.000000      4.000000
+  mean   32.500000  65000.000000
+  std     6.454972  12909.944487
+  min    25.000000  50000.000000
+  25%    28.750000  57500.000000
+  50%    32.500000  65000.000000
+  75%    36.250000  72500.000000
+  max    40.000000  80000.000000
 
-$P(\text{Absent|Friday}) = \frac{0.03}{0.20} = 0.15$
+  Selecting Age Column:
+  0    25
+  1    30
+  2    35
+  3    40
+  Name: Age, dtype: int64
 
-- The probability of a student being absent on a Friday is thus **15%**.
+  Filtering Rows where Age > 30:
+         Name  Age  Salary
+  2  Charlie   35   70000
+  3    David   40   80000
+  ```
+
+  **Matplotlib Output:**  
+    ![bar chart](image.png)
+  - A **bar chart** displaying employee names on the x-axis and their salaries on the y-axis.  
+
+- **Explanation:**  
+  - **Pandas** provides functionalities for data manipulation and analysis.  
+  - **Matplotlib** is used for data visualization, helping to represent trends and patterns graphically.  
+  - The Pandas example demonstrates DataFrame creation, data selection, and basic analysis.  
+  - The Matplotlib example showcases how to create a simple bar chart.

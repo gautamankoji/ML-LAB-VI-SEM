@@ -1,138 +1,107 @@
-# Exercise 07
+# Exercise 08  
 
-## Build an Artificial Neural Network by implementing the Backpropagation algorithm and test the same using appropriate datasets
+## Implementation of Support Vector Machines (SVM) using sklearn  
 
 ### Aim  
 
-To build an Artificial Neural Network (ANN) by implementing the Backpropagation algorithm and test its performance using an appropriate dataset.
+To implement **Support Vector Machine (SVM) algorithm** using Python and `sklearn` for classification tasks.  
 
-### Theory
-
-Artificial Neural Networks (ANNs) are computational models inspired by biological neural networks. They consist of layers of interconnected neurons, where:  
-
-- **Input Layer:** Accepts input features.  
-- **Hidden Layers:** Processes data with weights, biases, and activation functions.  
-- **Output Layer:** Produces predictions.  
-
-**Backpropagation Algorithm:**  
-Backpropagation is used to minimize the error by updating weights and biases through gradient descent.  
-
-Steps:  
-
-1. **Forward Propagation:** Compute outputs.  
-2. **Compute Loss:** Measure the difference between actual and predicted values.  
-3. **Backward Propagation:** Calculate gradients of the loss with respect to weights.  
-4. **Update Weights:** Adjust weights using the gradients to minimize loss.  
-
-Mathematically:  
-$$
-\Delta w = -\eta \frac{\partial L}{\partial w}
-$$  
-Where:  
-
-- $\eta$: Learning rate  
-- $L$: Loss function  
-
-### Procedure/Program
+### Procedure/Program  
 
 ```python
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-# activation functions and their derivatives
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
+# sample dataset (Student Scores and Pass/Fail Status)
+data = {
+    "Hours_Studied": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "Previous_Scores": [50, 55, 60, 62, 65, 70, 75, 80, 85, 90],
+    "Pass": [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]  # 1 = Pass, 0 = Fail
+}
 
-def sigmoid_derivative(x):
-    return x * (1 - x)
+# DataFrame
+df = pd.DataFrame(data)
 
-def tanh(x):
-    return np.tanh(x)
+# splitting independent (X) and dependent (y) variables
+X = df[["Hours_Studied", "Previous_Scores"]]
+y = df["Pass"]
 
-def tanh_derivative(x):
-    return 1 - np.tanh(x) ** 2
+# training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# XOR dataset
-X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-y = np.array([[0], [1], [1], [0]])
+# creating and training the SVM model with a linear kernel
+model = SVC(kernel='linear', random_state=42)
+model.fit(X_train, y_train)
 
-# initialize weights and biases
-np.random.seed(42)
-input_neurons = X.shape[1]
-hidden_neurons = 4
-output_neurons = 1
+# predicting pass/fail status
+y_pred = model.predict(X_test)
 
-weights_input_hidden = np.random.uniform(-1, 1, size=(input_neurons, hidden_neurons))
-weights_hidden_output = np.random.uniform(-1, 1, size=(hidden_neurons, output_neurons))
-bias_hidden = np.random.uniform(-1, 1, size=(1, hidden_neurons))
-bias_output = np.random.uniform(-1, 1, size=(1, output_neurons))
-learning_rate = 0.1
+# model evaluation
+accuracy = accuracy_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+class_report = classification_report(y_test, y_pred)
 
-# train the ANN
-epochs = 10000
-for epoch in range(epochs):
-    # forward propagation
-    hidden_layer_input = np.dot(X, weights_input_hidden) + bias_hidden
-    hidden_layer_output = tanh(hidden_layer_input)
+# results
+print("Accuracy:", accuracy)
+print("\nConfusion Matrix:\n", conf_matrix)
+print("\nClassification Report:\n", class_report)
 
-    output_layer_input = np.dot(hidden_layer_output, weights_hidden_output) + bias_output
-    predicted_output = sigmoid(output_layer_input)
+# plotting Decision Boundaries (Visualization)
+x_min, x_max = X["Hours_Studied"].min() - 1, X["Hours_Studied"].max() + 1
+y_min, y_max = X["Previous_Scores"].min() - 1, X["Previous_Scores"].max() + 1
+xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.1), np.arange(y_min, y_max, 0.1))
 
-    # compute loss
-    error = y - predicted_output
-    loss = np.mean(error ** 2)
+Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
+Z = Z.reshape(xx.shape)
 
-    # backward propagation
-    d_output = error * sigmoid_derivative(predicted_output)
-    error_hidden_layer = d_output.dot(weights_hidden_output.T)
-    d_hidden_layer = error_hidden_layer * tanh_derivative(hidden_layer_output)
-
-    # update weights and biases
-    weights_hidden_output += hidden_layer_output.T.dot(d_output) * learning_rate
-    bias_output += np.sum(d_output, axis=0, keepdims=True) * learning_rate
-    weights_input_hidden += X.T.dot(d_hidden_layer) * learning_rate
-    bias_hidden += np.sum(d_hidden_layer, axis=0, keepdims=True) * learning_rate
-
-    # print loss at intervals
-    if epoch % 1000 == 0:
-        print(f"Epoch {epoch}, Loss: {loss:.6f}")
-
-# test the ANN
-hidden_layer_input = np.dot(X, weights_input_hidden) + bias_hidden
-hidden_layer_output = tanh(hidden_layer_input)
-output_layer_input = np.dot(hidden_layer_output, weights_hidden_output) + bias_output
-predicted_output = sigmoid(output_layer_input)
-predicted_classes = (predicted_output > 0.5).astype(int)
-
-# evaluate
-accuracy = np.mean(predicted_classes == y)
-print(f"Accuracy on XOR problem: {accuracy * 100:.2f}%")
+plt.contourf(xx, yy, Z, alpha=0.3)
+plt.scatter(X_train["Hours_Studied"], X_train["Previous_Scores"], c=y_train, label="Training Data")
+plt.scatter(X_test["Hours_Studied"], X_test["Previous_Scores"], c=y_pred, marker="*", s=100, label="Predicted Test Data")
+plt.xlabel("Hours Studied")
+plt.ylabel("Previous Scores")
+plt.title("SVM Classification: Pass/Fail Prediction")
+plt.legend()
+plt.show()
 ```
 
 ### Output/Explanation  
 
-Output:
+- **Output:**
 
-```bash
-Epoch 0, Loss: 0.268363
-Epoch 1000, Loss: 0.011625
-Epoch 2000, Loss: 0.003529
-Epoch 3000, Loss: 0.001965
-Epoch 4000, Loss: 0.001336
-Epoch 5000, Loss: 0.001003
-Epoch 6000, Loss: 0.000798
-Epoch 7000, Loss: 0.000661
-Epoch 8000, Loss: 0.000562
-Epoch 9000, Loss: 0.000489
-Accuracy on XOR problem: 100.00%
-```
+  ![(SVM) classification model](image.png)
 
-1. **Training Loss:** Displayed at intervals to show model improvement.  
-2. **Accuracy:** Final accuracy of the model on test data.  
+  ```bash
+  Accuracy: 1.0
 
-Explanation:
+  Confusion Matrix:
+   [[1 0]
+   [0 1]]
 
-- The ANN learns to solve the XOR problem through forward and backward propagation.  
-- Weights are updated iteratively using gradients to minimize the loss.  
-- The trained model is evaluated on test data to measure performance.  
+  Classification Report:
+                 precision    recall  f1-score   support
 
-This implementation demonstrates the working of a simple neural network with backpropagation using Python.
+             0       1.00      1.00      1.00         1
+             1       1.00      1.00      1.00         1
+
+      accuracy                           1.00         2
+     macro avg       1.00      1.00      1.00         2
+  weighted avg       1.00      1.00      1.00         2
+
+  ```
+
+  The program trains a **Support Vector Machine (SVM) classification model** and predicts whether a student passes or fails based on **Hours Studied and Previous Scores**. Expected output includes:  
+  - **Accuracy Score** (percentage of correctly predicted values)  
+  - **Confusion Matrix** (shows true vs predicted values)  
+  - **Classification Report** (precision, recall, F1-score)  
+  - **Decision boundary plot** visualizing predictions.  
+
+- **Explanation:**  
+  - The dataset contains **Hours Studied** and **Previous Scores** as input (`X`) and **Pass/Fail status** as output (`y`).  
+  - The data is **split** into training and testing sets.  
+  - A **Support Vector Machine (SVM) model** with a **linear kernel** is trained using `SVC()`.  
+  - The model predicts pass/fail status and evaluates performance using **accuracy, confusion matrix, and classification report**.  
+  - A **decision boundary plot** helps visualize how the SVM algorithm classifies students based on features.
